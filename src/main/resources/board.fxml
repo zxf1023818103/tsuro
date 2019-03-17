@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.collections.*?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="cn.edu.nchu.stu.tsuro.Main"
+           prefHeight="600.0" prefWidth="1000.0">
+
+    <!-- 开始界面 -->
+    <HBox fx:id="startPanel" alignment="CENTER">
+        <VBox alignment="CENTER">
+            <GridPane>
+                <Label GridPane.columnIndex="1" GridPane.rowIndex="1" alignment="CENTER">游戏人数</Label>
+                <ComboBox fx:id="playerNumberBox" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <Integer fx:value="1"/>
+                            <Integer fx:value="2"/>
+                            <Integer fx:value="3"/>
+                            <Integer fx:value="4"/>
+                        </FXCollections>
+                    </items>
+                    <value>
+                        <Integer fx:value="1"/>
+                    </value>
+                </ComboBox>
+                <Label GridPane.columnIndex="1" GridPane.rowIndex="2" alignment="CENTER">获胜方式</Label>
+                <fx:define>
+                    <ToggleGroup fx:id="gamingTypeGroup"/>
+                </fx:define>
+                <HBox GridPane.columnIndex="2" GridPane.rowIndex="2" alignment="CENTER">
+                    <RadioButton toggleGroup="$gamingTypeGroup" userData="LONGEST_LENGTH" selected="true">最长通路获胜</RadioButton>
+                    <RadioButton toggleGroup="$gamingTypeGroup" userData="LONGEST_LIVE_TIME">存活的棋子获胜</RadioButton>
+                </HBox>
+                <Label GridPane.columnIndex="1" GridPane.rowIndex="3" alignment="CENTER">棋盘大小</Label>
+                <fx:define>
+                    <ToggleGroup fx:id="boardSizeGroup"/>
+                </fx:define>
+                <HBox GridPane.columnIndex="2" GridPane.rowIndex="3" alignment="CENTER">
+                    <RadioButton toggleGroup="$boardSizeGroup" userData="6" selected="true">6x6</RadioButton>
+                    <RadioButton toggleGroup="$boardSizeGroup" userData="9">9x9</RadioButton>
+                </HBox>
+                <Button GridPane.columnIndex="1" GridPane.rowIndex="4" alignment="CENTER" onMouseClicked="#startGame">开始游戏</Button>
+                <Button GridPane.columnIndex="2" GridPane.rowIndex="4" alignment="CENTER" onMouseClicked="#exit">退出</Button>
+            </GridPane>
+        </VBox>
+    </HBox>
+
+    <!-- 游戏主界面 -->
+    <StackPane fx:id="mainPanel" visible="false">
+        <!-- 计分板 -->
+        <GridPane fx:id="scorePanel" alignment="TOP_LEFT" prefHeight="10" prefWidth="20" visible="false">
+            <Label fx:id="playerLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-font-size: 12">●</Label>
+            <Label fx:id="totalLengthLabel" GridPane.rowIndex="1" GridPane.columnIndex="2" style="-fx-font-size: 12">0 cm</Label>
+        </GridPane>
+
+        <!-- 棋盘 -->
+        <HBox alignment="CENTER">
+            <VBox alignment="CENTER">
+                <StackPane>
+                    <GridPane fx:id="boardPanel" prefHeight="500" prefWidth="500" gridLinesVisible="true"/>
+                    <AnchorPane fx:id="piecePanel" prefHeight="500" prefWidth="500" maxHeight="500" maxWidth="500"/>
+                </StackPane>
+            </VBox>
+        </HBox>
+
+        <!-- 牌堆，只呈现 3 张拼图 -->
+        <GridPane fx:id="blockPilePanel" alignment="TOP_RIGHT" prefHeight="450" prefWidth="150" gridLinesVisible="true" visible="false">
+            <ImageView fx:id="blockView1" GridPane.columnIndex="1" GridPane.rowIndex="1" fitHeight="150"
+                       fitWidth="150" onMouseClicked="#rotate90degOrSelectBlock"/>
+            <ImageView fx:id="blockView2" GridPane.columnIndex="1" GridPane.rowIndex="2" fitHeight="150"
+                       fitWidth="150" onMouseClicked="#rotate90degOrSelectBlock"/>
+            <ImageView fx:id="blockView3" GridPane.columnIndex="1" GridPane.rowIndex="3" fitHeight="150"
+                       fitWidth="150" onMouseClicked="#rotate90degOrSelectBlock"/>
+        </GridPane>
+    </StackPane>
+
+</StackPane>
