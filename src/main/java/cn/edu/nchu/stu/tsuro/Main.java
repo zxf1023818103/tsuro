@@ -115,6 +115,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        primaryStage.setTitle("Tsuro");
         /// 读取界面文件
         Parent root = FXMLLoader.load(getClass().getResource("/board.fxml"));
         primaryStage.setScene(new Scene(root));
