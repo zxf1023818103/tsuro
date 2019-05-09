@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
@@ -47,8 +45,8 @@
                     <RadioButton toggleGroup="$boardSizeGroup" userData="6" selected="true">6x6</RadioButton>
                     <RadioButton toggleGroup="$boardSizeGroup" userData="9">9x9</RadioButton>
                 </HBox>
-                <Button GridPane.columnIndex="1" GridPane.rowIndex="4" alignment="CENTER" onMouseClicked="#startGame">开始游戏</Button>
-                <Button GridPane.columnIndex="2" GridPane.rowIndex="4" alignment="CENTER" onMouseClicked="#exit">退出</Button>
+                <Button GridPane.columnIndex="1" GridPane.rowIndex="4" alignment="CENTER" onAction="#startGame">开始游戏</Button>
+                <Button GridPane.columnIndex="2" GridPane.rowIndex="4" alignment="CENTER" onAction="#exit">退出</Button>
             </GridPane>
         </VBox>
     </HBox>
@@ -80,6 +78,15 @@
             <ImageView fx:id="blockView3" GridPane.columnIndex="1" GridPane.rowIndex="3" fitHeight="150"
                        fitWidth="150" onMouseClicked="#rotate90degOrSelectBlock"/>
         </GridPane>
+
+        <!-- 游戏结果 -->
+        <VBox fx:id="resultPanel" visible="false" alignment="CENTER">
+            <HBox alignment="CENTER">
+                <Label>Winner: </Label>
+                <Label fx:id="winnerLabel">●</Label>
+            </HBox>
+        </VBox>
+
     </StackPane>
 
 </StackPane>

@@ -1,9 +1,11 @@
 package cn.edu.nchu.stu.tsuro;
 
-public class BlockInfo {
+class PieceInfo {
+
+    int globalPosition;
+
     int blockX;
 
     int blockY;
 
-    int pointInBlockIndex;
 }

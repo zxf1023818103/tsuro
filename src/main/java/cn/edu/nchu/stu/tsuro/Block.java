@@ -2,13 +2,14 @@ package cn.edu.nchu.stu.tsuro;
 
 import javafx.scene.image.Image;
 
-class Block {
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Block implements Cloneable {
 
     Image image;
 
     Path[] paths;
-
-    Block[] adjacentBlocks = new Block[4];
 
     int rotate90degNumber = 0;
 
@@ -16,7 +17,63 @@ class Block {
 
     int blockY;
 
-    Block(Image image, Path[] paths) {
+    private static class BlockInfo {
+
+        Image image;
+
+        Path[] paths;
+
+        BlockInfo(Image image, Path[] paths) {
+            this.image = image;
+            this.paths = paths;
+        }
+    }
+
+    /**
+     * 所有拼图信息
+     */
+    private static ArrayList<BlockInfo> allBlockInfo = new ArrayList<>();
+
+    /// 读取拼图
+    private static void loadBlockData() {
+        Scanner scanner = new Scanner(Block.class.getResourceAsStream("/block.txt"));
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            Scanner lineScanner = new Scanner(line);
+            String imageFilename = lineScanner.next();
+            Path[] paths = new Path[4];
+            boolean[] added = new boolean[8];
+            boolean ok = true;
+            for (int i = 0; i < 4; i++) {
+                paths[i] = new Path();
+                paths[i].start = lineScanner.nextInt() - 1;
+                paths[i].end = lineScanner.nextInt() - 1;
+                if (added[paths[i].start] || added[paths[i].end]) {
+                    System.out.println("Error: line " + (allBlockInfo.size() + 1));
+                }
+                added[paths[i].start] = added[paths[i].end] = true;
+            }
+            allBlockInfo.add(new BlockInfo(new Image(Block.class.getResourceAsStream("/img/" + imageFilename)), paths));
+        }
+    }
+
+    static {
+        loadBlockData();
+    }
+
+    static Block create(int type) {
+        if (type >= allBlockInfo.size()) {
+            return null;
+        }
+        BlockInfo blockInfo = allBlockInfo.get(type);
+        return new Block(blockInfo.image, blockInfo.paths);
+    }
+
+    static int getBlockNumbers() {
+        return allBlockInfo.size();
+    }
+
+    private Block(Image image, Path[] paths) {
         this.image = image;
         this.paths = paths;
     }
@@ -32,7 +89,4 @@ class Block {
         rotate90degNumber %= 4;
     }
 
-    void select(int blockX, int blockY) {
-
-    }
 }
