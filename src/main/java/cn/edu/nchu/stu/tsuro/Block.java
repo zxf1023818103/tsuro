@@ -7,14 +7,29 @@ import java.util.Scanner;
 
 class Block implements Cloneable {
 
+    /**
+     * 拼图的图像
+     */
     Image image;
 
+    /**
+     * 拼图包含的路径
+     */
     Path[] paths;
 
+    /**
+     * 旋转次数
+     */
     int rotate90degNumber = 0;
 
+    /**
+     * 拼图所在位置横坐标
+     */
     int blockX;
 
+    /**
+     * 拼图所在位置纵坐标
+     */
     int blockY;
 
     private static class BlockInfo {
@@ -34,7 +49,9 @@ class Block implements Cloneable {
      */
     private static ArrayList<BlockInfo> allBlockInfo = new ArrayList<>();
 
-    /// 读取拼图
+    /**
+     * 读取拼图
+     */
     private static void loadBlockData() {
         Scanner scanner = new Scanner(Block.class.getResourceAsStream("/block.txt"));
         while (scanner.hasNextLine()) {
@@ -61,6 +78,11 @@ class Block implements Cloneable {
         loadBlockData();
     }
 
+    /**
+     * 工厂模式方法，创建拼图
+     * 
+     * @param type 拼图种类
+     */
     static Block create(int type) {
         if (type >= allBlockInfo.size()) {
             return null;
@@ -69,15 +91,24 @@ class Block implements Cloneable {
         return new Block(blockInfo.image, blockInfo.paths);
     }
 
+    /**
+     * 获取拼图种类数量
+     */
     static int getBlockNumbers() {
         return allBlockInfo.size();
     }
 
+    /**
+     * 构造方法，初始化成员
+     */
     private Block(Image image, Path[] paths) {
         this.image = image;
         this.paths = paths;
     }
 
+    /**
+     * 使拼图旋转 90 度
+     */
     void rotate90deg() {
         for (Path path : paths) {
             path.start += 2;

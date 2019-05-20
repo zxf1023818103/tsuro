@@ -27,40 +27,94 @@ import java.util.Random;
 
 public class Main extends Application {
 
+    /**
+     * 棋子半径
+     */
     private static final double PIECE_RADIUS = 5.0;
 
+    /**
+     * 移动时长
+     */
     private static final double MOVE_DURATION = 1000.0;
 
+    /**
+     * 游戏菜单面板
+     */
     public HBox startPanel;
 
+    /**
+     * 游戏人数下拉框
+     */
     public ComboBox<Integer> playerNumberBox;
 
+    /**
+     * 游戏主界面面板
+     */
     public StackPane mainPanel;
 
+    /**
+     * 棋盘图层
+     */
     public GridPane boardPanel;
 
+    /**
+     * 棋子图层
+     */
     public AnchorPane piecePanel;
 
+    /**
+     * 当前玩家标签
+     */
     public Label playerLabel;
 
+    /**
+     * 当前路程长度标签
+     */
     public Label totalLengthLabel;
 
+    /**
+     * 牌堆拼图位 1
+     */
     public ImageView blockView1;
 
+    /**
+     * 牌堆拼图位 2
+     */
     public ImageView blockView2;
 
+    /**
+     * 牌堆拼图位 3
+     */
     public ImageView blockView3;
 
+    /**
+     * 游戏类型单选框
+     */
     public ToggleGroup gamingTypeGroup;
 
+    /**
+     * 棋盘大小单选框
+     */
     public ToggleGroup boardSizeGroup;
 
+    /**
+     * 牌堆
+     */
     public GridPane blockPilePanel;
 
+    /**
+     * 计分板面板
+     */
     public GridPane scorePanel;
 
+    /**
+     * 游戏结果面板
+     */
     public VBox resultPanel;
 
+    /**
+     * 获胜者标签
+     */
     public Label winnerLabel;
 
     /**
@@ -83,6 +137,9 @@ public class Main extends Application {
      */
     private Player[] allPlayers;
 
+    /**
+     * 牌堆
+     */
     private ImageView[] blockViews = new ImageView[3];
 
     /**
@@ -111,8 +168,14 @@ public class Main extends Application {
      */
     private boolean[][] visitedBlocks;
 
+    /**
+     * 存储已经走过的点
+     */
     private Map<Integer, Boolean> visitedPositions = new HashMap<>();
 
+    /**
+     * 入口点，加载界面文件
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("Tsuro");
@@ -123,14 +186,18 @@ public class Main extends Application {
     }
 
 
-    /// 初始化牌堆
+    /**
+     * 初始化牌堆
+     */
     private void initializeBlockViewArray() {
         blockViews[0] = blockView1;
         blockViews[1] = blockView2;
         blockViews[2] = blockView3;
     }
 
-    /// 读取界面选项
+    /**
+     * 读取界面选项
+     */
     private void getGameOptions() {
         playerNumber = playerNumberBox.getSelectionModel().getSelectedIndex() + 1;
         sideSize = Integer.parseInt(boardSizeGroup.getSelectedToggle().getUserData().toString());
@@ -171,6 +238,9 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * 绘制棋盘
+     */
     private void drawBoard(double width, double height) {
         ColumnConstraints columnConstraints = new ColumnConstraints();
         columnConstraints.setPrefWidth(width / sideSize);
@@ -183,6 +253,9 @@ public class Main extends Application {
 
     }
 
+    /**
+     * 绘制棋子选择位
+     */
     private void drawPieceSelector() {
         allPlayers = new Player[playerNumber];
         Circle[] edgePieces = new Circle[sideSize * 4 * 2];
@@ -266,6 +339,9 @@ public class Main extends Application {
         piecePanel.getChildren().addAll(edgePieces);
     }
 
+    /**
+     * 获取下一位轮到的玩家
+     */
     private Player nextPlayer() {
         Player player = null;
         while (!(player = allPlayers[currentPlayerIndex++]).alive) {
@@ -275,6 +351,9 @@ public class Main extends Application {
         return player;
     }
 
+    /**
+     * 选择拼图并放在棋盘上
+     */
     private void selectBlock(Block block) {
         Player player = nextPlayer();
 
@@ -301,6 +380,9 @@ public class Main extends Application {
         step(player);
     }
 
+    /**
+     * 调试选项，在棋盘上显示全局位置
+     */
     private void debugGlobalPosition() {
 //        for (int i = 0; i < availablePoints.length; i++) {
 //            Label label = new Label(Integer.toString(i));
@@ -311,6 +393,9 @@ public class Main extends Application {
 //        }
     }
 
+    /**
+     * 选择完游戏选项后，开始游戏
+     */
     public void startGame(ActionEvent event) {
         /// 开始界面设置成禁用状态，表示正在加载
         startPanel.setDisable(true);
@@ -352,6 +437,9 @@ public class Main extends Application {
         System.exit(0);
     }
 
+    /**
+     * 牌堆的鼠标点击事件处理函数
+     */
     public void rotate90degOrSelectBlock(MouseEvent e) {
         ImageView target = (ImageView) e.getTarget();
         Block block = (Block) target.getUserData();
@@ -518,7 +606,7 @@ public class Main extends Application {
             if (_player.alive)
                 alive++;
         }
-        gameOver = alive <= 1;
+        gameOver = gamingType == GamingType.LONGEST_LENGTH ? alive == 0 : alive <= 1;
         if (gameOver) {
             blockPilePanel.setDisable(true);
             mainPanel.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
@@ -526,6 +614,9 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * 显示游戏获胜者
+     */
     private void displayResult() {
         double winnerLength = 0;
         Player winner = null;
@@ -548,6 +639,9 @@ public class Main extends Application {
         resultPanel.setVisible(true);
     }
 
+    /**
+     * 更新计分板
+     */
     private void updateScoreBoard(Player player) {
         /// 更新标签颜色
         playerLabel.setTextFill(pieceColors[player.index]);
@@ -555,6 +649,9 @@ public class Main extends Application {
         totalLengthLabel.setText(String.format("%.1f cm", player.totalLength / (piecePanel.getWidth() / sideSize) * 5.0));
     }
 
+    /**
+     * 创建棋子移动动画
+     */
     private Animation createAnimation(Player player, int nextPosition) {
         Point2D start = availablePoints[player.currentPosition];
         Point2D end = availablePoints[nextPosition];
@@ -570,6 +667,9 @@ public class Main extends Application {
         return animation;
     }
 
+    /**
+     * 更新玩家位置信息
+     */
     private void updatePlayerPosition(Player player, int globalPosition) {
         if (!player.alive) {
             return;
